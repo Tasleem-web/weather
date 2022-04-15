@@ -21,13 +21,9 @@ const Weather = () => {
   const [minValue, setMinValue] = useState(null);
   const [images, setImages] = useState(null);
   const [weekDay, setWeekDay] = useState([
-    "Sunday",
-    "Monday",
     "Tuesday",
     "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "Thursday"
   ]);
   const [fiveDays, setFiveDays] = useState(null);
   const [checkDayVar, setCheckDayVar] = useState(null);
@@ -58,7 +54,7 @@ const Weather = () => {
     setSelectedCity(opt.label);
     dispatch(getSelectedCityForecast(opt))
       .then((res) => {
-        const days = res?.payload?.list?.slice(0, 5);
+        const days = res?.payload?.list?.slice(0, 3);
         console.log(days);
         setFiveDays(days);
         let maxValue = [];
@@ -73,9 +69,7 @@ const Weather = () => {
             Math.round(Number(days[i].main.temp_min - 273.15)) + "°"
           );
           images.push(
-            "http://openweathermap.org/img/wn/" +
-              days[i].weather[0].icon +
-              ".png"
+            `http://openweathermap.org/img/wn//${days[i].weather[0].icon}.png`
           );
           checkDayVar.push(checkDay(i));
         }
@@ -110,12 +104,7 @@ const Weather = () => {
   };
 
   const checkDay = (day) => {
-    let d = new Date();
-    if (day + d.getDay() > 6) {
-      return <div>{weekDay[day + d.getDay() - 7]}</div>;
-    } else {
-      return <div>{weekDay[day + d.getDay()]}</div>;
-    }
+      return <div>{weekDay[day]}</div>;
   };
 
   return (
@@ -142,7 +131,6 @@ const Weather = () => {
                   </div>
                   <div>{selectedCityVal}</div>
                 </div>
-
                 {checkDayVar?.length > 0 && (
                   <div className="weather-in-diff-city">
                     {checkDayVar.map((day, i) => (
